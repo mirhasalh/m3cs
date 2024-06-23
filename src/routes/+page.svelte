@@ -44,19 +44,17 @@
           </div>
           <hr />
           <div class={`list-tile checkbox`}>
-            <span>Use SASS</span>
-            <label class="switch">
-              <input type="checkbox" bind:checked={useSass} />
-              <span class="slider round"></span>
-            </label>
+            <div class={`switch`}>
+              <input type="checkbox" id="sass" bind:checked={useSass} />
+              <label for="sass">Use SASS</label>
+            </div>
           </div>
           <hr />
           <div class={`list-tile checkbox`}>
-            <span>Include RGB</span>
-            <label class="switch">
-              <input type="checkbox" bind:checked={useRgb} />
-              <span class="slider round"></span>
-            </label>
+            <div class={`switch`}>
+              <input type="checkbox" id="rgb" bind:checked={useRgb} />
+              <label for="rgb">Include RGB</label>
+            </div>
           </div>
           <hr class={`transparent`} />
           <div class={`center`}>
