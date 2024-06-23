@@ -2,9 +2,12 @@ $toolbar-height: 60px;
 $lg: 1024px;
 $btn-height: 43.0px;
 $rounded: 9999px;
+$rounded-md: 0.75rem;
 $bg-color: #fafafa;
 $shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
 $divider-thickness: 0.0125rem;
+$divider-color: #ebedf0;
+$active-color: #2196F3;
 
 @mixin lg {
     @media (min-width: #{$lg}) {
@@ -24,6 +27,12 @@ $divider-thickness: 0.0125rem;
     align-items: center;
 }
 
+@mixin flex-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 body {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     background-color: $bg-color;
@@ -39,7 +48,7 @@ footer {
 
 hr {
     border: none;
-    border-bottom: $divider-thickness solid;
+    border-bottom: $divider-thickness solid $divider-color;
     width: 100%;
 
     &.transparent {
@@ -57,6 +66,10 @@ hr {
     }
 }
 
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
 .app-bar {
     height: $toolbar-height;
     @include flex-center();
@@ -66,15 +79,18 @@ hr {
     margin: 0;
 }
 
-.color-bar {
-    box-shadow: $shadow;
-    border-radius: $rounded;
+.list-tile {
+    height: $toolbar-height;
     @include flex-start();
-    padding: 0.5rem;
-    background-color: #ffffff;
+    padding: 0px 0.5rem;
+
+    &.checkbox {
+        height: 50px;
+        @include flex-between();
+    }
 }
 
-.color-pick {
+.color-picker {
     width: $btn-height;
     height: $btn-height;
     overflow: hidden;
@@ -91,10 +107,10 @@ hr {
     }
 }
 
-.color-scheme-wrapper {
+.card {
     background-color: #ffffff;
     box-shadow: $shadow;
-    border-radius: 0.5rem;
+    border-radius: $rounded-md;
     padding: 1px;
 
     >header {
@@ -144,4 +160,126 @@ hr {
             border-color: transparent;
         }
     }
+}
+
+.btn {
+    cursor: pointer;
+    position: relative;
+    display: block;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border-width: 0;
+    outline: none;
+    border-radius: 2px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .6);
+    background-color: #1b1b1b;
+    color: #ffffff;
+    transition: background-color .3s;
+    font-size: 16px;
+
+    &:hover,
+    &:focus {
+        background-color: $active-color;
+    }
+
+    >* {
+        position: relative;
+    }
+
+    >span {
+        display: block;
+        padding: 12px 24px;
+    }
+
+    &:before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        display: block;
+        width: 0;
+        padding-top: 0;
+        border-radius: 100%;
+        background-color: rgba(236, 240, 241, .3);
+        -webkit-transform: translate(-50%, -50%);
+        -moz-transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        -o-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
+
+    &:active:before {
+        width: 120%;
+        padding-top: 120%;
+        transition: width .2s ease-out, padding-top .2s ease-out;
+    }
+
+    &.rounded {
+        border-radius: $rounded;
+    }
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 28px;
+
+    >input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: lightgray;
+    -webkit-transition: .4s;
+    transition: .4s;
+
+    &:before {
+        position: absolute;
+        content: "";
+        height: 20px;
+        width: 20px;
+        left: 4px;
+        bottom: 4px;
+        background-color: #ffffff;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+    &.round {
+        border-radius: 28px;
+
+        &:before {
+            border-radius: 50%;
+        }
+    }
+}
+
+
+input:checked+.slider {
+    background-color: $active-color;
+}
+
+input:focus+.slider {
+    box-shadow: 0 0 1px $active-color;
+}
+
+input:checked+.slider:before {
+    -webkit-transform: translateX(22px);
+    -ms-transform: translateX(22px);
+    transform: translateX(22px);
+}
+
+.center {
+    @include flex-center();
 }

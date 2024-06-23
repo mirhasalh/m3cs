@@ -4,4 +4,4 @@
 
 <slot />
 
-<footer>Powered by:</footer>
+<footer></footer>
