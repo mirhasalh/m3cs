@@ -1,8 +1,16 @@
 $toolbar-height: 60px;
+$lg: 1024px;
 $btn-height: 43.0px;
 $rounded: 9999px;
 $bg-color: #fafafa;
 $shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+$divider-thickness: 0.0125rem;
+
+@mixin lg {
+    @media (min-width: #{$lg}) {
+        @content;
+    }
+}
 
 @mixin flex-center {
     display: flex;
@@ -25,59 +33,65 @@ body {
 footer {
     margin-top: 1rem;
     height: $toolbar-height;
-    background-color: black;
-    color: #fafafa;
     @include flex-start();
     padding: 0px 1rem;
 }
 
 hr {
     border: none;
-    border-bottom: 0.0125rem solid darkgray;
+    border-bottom: $divider-thickness solid;
     width: 100%;
 
     &.transparent {
-        border-bottom: 0.0125rem solid transparent;
+        border-color: transparent;
     }
+
+    &.vertical {
+        width: unset;
+        height: 100%;
+        border-left: $divider-thickness solid;
+
+        &.transparent {
+            border-color: transparent;
+        }
+    }
+}
+
+.app-bar {
+    height: $toolbar-height;
+    @include flex-center();
 }
 
 .shrink {
     margin: 0;
 }
 
-.color-bar-wrapper {
-    @include flex-center();
-    flex-direction: column;
-    margin: 1.5rem;
+.color-bar {
+    box-shadow: $shadow;
+    border-radius: $rounded;
+    @include flex-start();
+    padding: 0.5rem;
+    background-color: #ffffff;
+}
 
-    .color-bar {
-        box-shadow: $shadow;
-        border-radius: $rounded;
-        @include flex-start();
-        padding: 0.5rem;
-        min-width: 20em;
-        background-color: #ffffff;
+.color-pick {
+    width: $btn-height;
+    height: $btn-height;
+    overflow: hidden;
+    border-radius: $rounded;
+    margin-right: 1rem;
 
-        .color-pick {
-            width: $btn-height;
-            height: $btn-height;
-            overflow: hidden;
-            border-radius: $rounded;
-            margin-right: 1rem;
-
-            >input[type='color'] {
-                width: 100%;
-                height: 100%;
-                background: #FFFFFF 0% 0% no-repeat padding-box;
-                box-shadow: 0px 3px 6px #0000001A;
-                transform: scale(1.5);
-            }
-        }
+    >input[type='color'] {
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+        background: #ffffff 0% 0% no-repeat padding-box;
+        box-shadow: 0px 3px 6px #0000001A;
+        transform: scale(1.5);
     }
 }
 
 .color-scheme-wrapper {
-    margin: 0px 1rem;
     background-color: #ffffff;
     box-shadow: $shadow;
     border-radius: 0.5rem;
@@ -96,6 +110,38 @@ hr {
 
     .color-grid-item {
         height: $btn-height;
-        background-color: #cecece;
+        background-color: lightgray;
+    }
+}
+
+.app-shell {
+    display: grid;
+    grid-template-columns: 1rem 1fr 1rem;
+
+    @include lg {
+        display: grid;
+        grid-template-columns: 20% 60% 20%;
+    }
+}
+
+.main-content {
+    display: block;
+    align-items: baseline;
+
+    >hr {
+        border-color: transparent;
+    }
+
+    @include lg {
+        display: grid;
+        grid-template-columns: 18em 1rem 1fr;
+        align-items: start;
+
+        >hr {
+            height: 100%;
+            width: unset;
+            border-left: $divider-thickness solid;
+            border-color: transparent;
+        }
     }
 }
