@@ -1,14 +1,66 @@
-<script>
+<script lang="ts">
+  import { onMount } from 'svelte'
   import Palette from '$lib/Palette.svelte'
-
-  const n = 33
+  import { hexFromArgb, argbFromHex, themeFromSourceColor, applyTheme } from '@material/material-color-utilities'
+  import { rgbaFromHex, determineLightOrDark } from '$lib'
 
   let primaryColor = '#4b0082',
     secondaryColor = '#fc6d26',
     useSass = true,
-    useRgb = true
+    useRgb = true,
+    colorScheme: App.ColorScheme,
+    colorSchemeDark: App.ColorScheme,
+    containers: App.Container[] = [],
+    containersDark: App.Container[] = [],
+    systemDark: boolean
+
+  $: theme = themeFromSourceColor(argbFromHex(primaryColor), [
+    {
+      name: 'custom-1',
+      value: argbFromHex(secondaryColor),
+      blend: true
+    }
+  ])
+
+  const determineContainers = () => {
+    systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+
+    colorScheme = theme.schemes.light
+    colorSchemeDark = theme.schemes.dark
+
+    const cloned = JSON.parse(JSON.stringify(colorScheme))
+    const cloned2 = JSON.parse(JSON.stringify(colorSchemeDark))
+
+    containers = []
+    containersDark = []
+
+    for (let k in cloned) {
+      const hex = hexFromArgb(cloned[k])
+      const rgba = rgbaFromHex(hex, 1)
+      const brightness = determineLightOrDark(rgba)
+      const fontColor = brightness === 'dark' ? '#000' : '#fff'
+
+      containers = [...containers, { name: k, color: hex, fontColor: fontColor }]
+    }
+
+    for (let j in cloned2) {
+      const hex = hexFromArgb(cloned2[j])
+      const rgba = rgbaFromHex(hex, 1)
+      const brightness = determineLightOrDark(rgba)
+      const fontColor = brightness === 'dark' ? '#000' : '#fff'
+
+      containersDark = [...containersDark, { name: j, color: hex, fontColor: fontColor }]
+    }
+
+    applyTheme(theme, { target: document.body, dark: systemDark })
+  }
 
   $: text = useSass ? 'SASS' : 'CSS'
+  $: if (primaryColor && colorScheme) determineContainers()
+
+  onMount(() => {
+    determineContainers()
+  })
 </script>
 
 <header class={`app-bar`}>
@@ -70,8 +122,10 @@
             <h3>Light scheme</h3>
           </header>
           <div class={`color-grid`}>
-            {#each Array.from({ length: n }) as item}
-              <div class={`color-grid-item`}>{item}</div>
+            {#each containers as c}
+              <div class={`color-grid-item`} style={`background-color: ${c.color}; color: ${c.fontColor};`}>
+                <p><small>{c.name}</small></p>
+              </div>
             {/each}
           </div>
         </section>
@@ -81,8 +135,10 @@
             <h3>Dark scheme</h3>
           </header>
           <div class={`color-grid`}>
-            {#each Array.from({ length: n }) as item}
-              <div class={`color-grid-item`}>{item}</div>
+            {#each containersDark as c}
+              <div class={`color-grid-item`} style={`background-color: ${c.color}; color: ${c.fontColor};`}>
+                <p><small>{c.name}</small></p>
+              </div>
             {/each}
           </div>
         </section>

@@ -127,6 +127,10 @@ hr {
     .color-grid-item {
         height: $btn-height;
         background-color: lightgray;
+
+        >p {
+            margin-left: 0.5rem;
+        }
     }
 }
 
